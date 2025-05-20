@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Root version="1">
+	<Transcode>
+		<Description>Audio only transcode to resample audio for extraction</Description>
+		<Encodes>
+			<Encode>
+				<Enable>true</Enable>
+				<Name>resampled</Name>
+				<StreamName>mp4:${SourceStreamName}_resampled</StreamName>
+				<Video>
+					<Codec>Disable</Codec>
+				</Video>
+				<Audio>
+					<Codec>AAC</Codec>
+					<Bitrate>48000</Bitrate>
+					<Parameters>
+					</Parameters>
+				</Audio>
+				<Properties>
+				</Properties>
+			</Encode>
+		</Encodes>
+		<Decode>
+			<Audio>
+				<Resample>
+					<Enable>true</Enable>
+					<SampleRate>16000</SampleRate>
+					<Channels>1</Channels>
+				</Resample>
+			</Audio>
+		</Decode>
+	</Transcode>
+</Root>

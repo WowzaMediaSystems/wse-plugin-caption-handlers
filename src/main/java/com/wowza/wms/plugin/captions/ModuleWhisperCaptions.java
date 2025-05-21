@@ -46,7 +46,7 @@ public class ModuleWhisperCaptions extends ModuleCaptionsBase
         MODULE_NAME = CLASS.getSimpleName();
     }
 
-    public static final String PROP_CAPTIONS_ENABLED = "verbitCaptionsEnabled";
+    public static final String PROP_CAPTIONS_ENABLED = "whisperCaptionsEnabled";
 
     private final Map<String, SpeechHandler> speechHandlers = new ConcurrentHashMap<>();
     private final Map<String, DelayedStream> delayedStreams = new ConcurrentHashMap<>();
@@ -68,10 +68,10 @@ public class ModuleWhisperCaptions extends ModuleCaptionsBase
             enabled = appInstance.getProperties().getPropertyBoolean(PROP_CAPTIONS_ENABLED, enabled);
         if (!enabled)
         {
-            logger.info(MODULE_NAME + ".onAppStart[" + appInstance.getContextStr() + "] Verbit captions module disabled");
+            logger.info(MODULE_NAME + ".onAppStart[" + appInstance.getContextStr() + "] Whisper captions module disabled");
             return;
         }
-
+        logger.info(MODULE_NAME + ".onAppStart[" + appInstance.getContextStr() + "]");
         try
         {
             appInstance.addLiveStreamPacketizerListener(new LiveStreamPacketizerListener(appInstance));

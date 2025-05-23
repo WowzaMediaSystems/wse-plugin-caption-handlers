@@ -31,17 +31,14 @@ import java.util.Map;
 
 public class WhisperCaptionsTranscoderActionListener extends AudioResamplingTranscoderActionListener
 {
-    private final String wssUrl;
-
-    public WhisperCaptionsTranscoderActionListener(IApplicationInstance appInstance, Map<String, SpeechHandler> speechHandlers, Map<String, DelayedStream> delayedStreams, String wssUrl)
+    public WhisperCaptionsTranscoderActionListener(IApplicationInstance appInstance, Map<String, SpeechHandler> speechHandlers, Map<String, DelayedStream> delayedStreams)
     {
         super(appInstance, speechHandlers, delayedStreams);
-        this.wssUrl = wssUrl;
     }
 
     @Override
     public SpeechHandler getSpeechHandler(CaptionHandler captionHandler)
     {
-        return new WhisperSpeechToTextHandler(appInstance, captionHandler, wssUrl);
+        return new WhisperSpeechToTextHandler(appInstance, captionHandler);
     }
 }

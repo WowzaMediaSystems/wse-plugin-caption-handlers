@@ -10,13 +10,6 @@ plugins {
 group 'com.wowza.wms.plugin.captions'
 version '1.0.0'
 
-def getBuildRevision(commitTime) {
-    def commitDateFormatter = DateTimeFormatter.ofPattern("EEE LLL dd HH:mm:ss yyyy Z")
-    def buildDate = LocalDateTime.parse(commitTime, commitDateFormatter)
-    def revisionFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-    return revisionFormatter.format(buildDate)
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -32,7 +25,6 @@ repositories {
 
 configurations {
     plugin
-    shared
     compileClasspath.extendsFrom(plugin)
     runtimeClasspath.extendsFrom(plugin)
     testCompileClasspath.extendsFrom(plugin)
@@ -45,7 +37,7 @@ dependencies {
     implementation name: 'wms-stream-publish'
     implementation name: 'wms-transcoder'
     implementation name: 'wms-httpstreamer-cupertinostreaming'
-    implementation name: 'wms-pushpublish'
+//    implementation name: 'wms-pushpublish'
     implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
     implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
@@ -55,7 +47,7 @@ dependencies {
 }
 
 tasks.register('copyDeps', Copy) {
-    from  (configurations.plugin, configurations.shared)
+    from  (configurations.plugin)
     into layout.buildDirectory.dir("libs")
 }
 
@@ -66,16 +58,17 @@ jar.configure {
 tasks.withType(Jar).configureEach {
     manifest {
         attributes(
-                'Gradle-Version'     	: "Gradle ${gradle.gradleVersion}",
+                'Gradle-Version'        : "Gradle ${gradle.gradleVersion}",
                 'Created-By'      		: "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-                'Build-Timestamp'    	: new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
-                'Specification-Title'	: "${title} - ${project.version}",
-                'Specification-Version'	: "${project.version}",
-                'Specification-Vendor'  : "www.wowza.com",
-                'Implementation-Title'  : "${title} - ${project.version}",
-                'Implementation-Version': "${-> getBuildRevision(project.ext.gitProps['git.commit.time'])}",
-                'Implementation-Vendor'	: "www.wowza.com"
+                'Name'                  : "${project.name}",
+                'Build-Version'	        : "${project.version}",
+                'Build-Timestamp'    	: "${-> project.ext.gitProps['git.commit.time']}",
+                'Build-Revision'        : "${-> project.ext.gitProps['git.commit.id.abbrev']}",
         )
+    }
+    exclude('git.properties')
+    metaInf {
+        from files('LICENSE.txt')
     }
     archiveBaseName = 'wse-plugin-' + projectName
 }

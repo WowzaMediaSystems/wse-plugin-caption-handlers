@@ -53,19 +53,11 @@ public class ModuleWhisperCaptions extends ModuleCaptionsBase
 
     private DelayedStreamListener delayedStreamListener;
 
-    private String wssUrl = DEFAULT_WS_URL;
     private boolean enabled = DEFAULT_CAPTIONS_ENABLED;
 
     public void onAppStart(IApplicationInstance appInstance)
     {
-        wssUrl = URLDecoder.decode(appInstance.getProperties().getPropertyStr("whisperWebsocketUrl", wssUrl), Charset.defaultCharset());
-        if (wssUrl.isBlank())
-        {
-            logger.error(MODULE_NAME + ".onAppStart[" + appInstance.getContextStr() + "] whisperWebsocketUrl is required");
-            enabled = false;
-        }
-        else
-            enabled = appInstance.getProperties().getPropertyBoolean(PROP_CAPTIONS_ENABLED, enabled);
+        enabled = appInstance.getProperties().getPropertyBoolean(PROP_CAPTIONS_ENABLED, enabled);
         if (!enabled)
         {
             logger.info(MODULE_NAME + ".onAppStart[" + appInstance.getContextStr() + "] Whisper captions module disabled");
@@ -75,7 +67,7 @@ public class ModuleWhisperCaptions extends ModuleCaptionsBase
         try
         {
             appInstance.addLiveStreamPacketizerListener(new LiveStreamPacketizerListener(appInstance));
-            appInstance.addLiveStreamTranscoderListener(new CaptionsTranscoderCreateListener(new WhisperCaptionsTranscoderActionListener(appInstance, speechHandlers, delayedStreams, wssUrl)));
+            appInstance.addLiveStreamTranscoderListener(new CaptionsTranscoderCreateListener(new WhisperCaptionsTranscoderActionListener(appInstance, speechHandlers, delayedStreams)));
             delayedStreamListener = new DelayedStreamListener(appInstance, delayedStreams);
             appInstance.addMediaCasterListener(delayedStreamListener);
         }

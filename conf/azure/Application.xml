@@ -128,7 +128,7 @@
 			<!--  IP address, transport, and port used for WebRTC streaming. -->
 			<!--TCP format: [wowza-streaming-engine-external-ip-address],tcp,[port] -->
 			<!--UDP format: [wowza-streaming-engine-external-ip-address],udp -->
-			<IceCandidateIpAddresses>127.0.0.1,udp</IceCandidateIpAddresses>
+			<IceCandidateIpAddresses>wse-trial.wowza.com,tcp,1935|127.0.0.1,udp</IceCandidateIpAddresses>
 			<!-- Local IP address of the network card you want to use for WebRTC UDP traffic -->
 			<UDPBindAddress></UDPBindAddress>
 			<!-- Comma-deliniated list of audio codecs, in order of preference, for stream ingestion -->

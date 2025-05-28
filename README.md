@@ -4,19 +4,22 @@ The **Caption Handlers** module for [Wowza Streaming Engine™ media server soft
 ## Prerequisites
 * Wowza Streaming Engine™ 4.9.4 or later is required.
 * Java 21.
-
-For the Azure Speech to Text module, you will also need an Azure account with the Speech service enabled.
+* For the Azure Speech to Text module, you will also need an Azure account with the Speech service enabled.
+* For the Whisper module, you will need a Whisper server configured.
 
 ## Usage
-The easiest way to test this mmodule is to use the included docker compose file. This will start a Wowza Streaming Engine instance with the modules installed and configured to use Azure Speech Services or Whisper to create the captions.
+The easiest way to test this module is to use the included docker compose file. This will start a Wowza Streaming Engine instance with the modules installed and configured to use Azure Speech Services or Whisper to create the captions.
 
 ## Build instructions
 * Clone repo to local filesystem.
 * Update `wseLibDir` variable in the `gradle.properties` file to point to local _Wowza Streaming Engine_ `lib` folder.
 * Run `./gradlew build` to build the jar file.
 
+## Configuration
+See the included Application.xml files for the module configurations.
+
 ## More resources
-For full install instructions and to use the compiled version of this module, see [DOCS-UPDATE-REQUIRED](https://www.wowza.com/docs/).
+For full install instructions and to use the compiled version of these modules, see [Use Automatic Speech Recognition to generate live captions](#).
 
 [Wowza Streaming Engine Server-Side API Reference](https://www.wowza.com/resources/serverapi/)
 

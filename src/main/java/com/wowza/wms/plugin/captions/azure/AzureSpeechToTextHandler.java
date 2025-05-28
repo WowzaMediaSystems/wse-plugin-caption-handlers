@@ -47,7 +47,7 @@ public class AzureSpeechToTextHandler implements SpeechHandler
     public static final String DEFAULT_RECOGNITION_LANGUAGE = "en-US";
     private final CaptionHandler captionHandler;
     private final WMSLogger logger;
-    private final ByteArrayAudioStream audioStream = new ByteArrayAudioStream();
+    private final PushAudioInputStream audioStream = PushAudioInputStream.createPushStream();
     private final Semaphore semaphore = new Semaphore(0);
     private final SpeechConfig speechConfig;
     private final String recognitionLanguage;
@@ -214,14 +214,13 @@ public class AzureSpeechToTextHandler implements SpeechHandler
     @Override
     public void addAudioFrame(byte[] frame)
     {
-//        if (audioStream.available() > 0)
-//            System.out.println("audioStream.available() = " + audioStream.available());
         audioStream.write(frame);
     }
 
     @Override
     public void close()
     {
+        audioStream.close();
         semaphore.release();
     }
 

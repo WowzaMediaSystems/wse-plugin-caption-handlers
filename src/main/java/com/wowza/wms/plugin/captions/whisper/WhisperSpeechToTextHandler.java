@@ -164,15 +164,12 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
                     outputRunning = true;
                     appInstance.getVHost().getThreadPool().execute(this::processPendingCaptions);
                 }
-
                 ByteBuffer frame = audioBuffer.poll(100, TimeUnit.MILLISECONDS);
                 if (frame == null)
                     continue;
                 if (socket != null && socket.isConnected())
                 {
-                    byte[] bytes = new byte[frame.remaining()];
-                    frame.get(bytes);
-                    socket.getOutputStream().write(bytes);
+                    socket.getOutputStream().write(frame.array());
                     socket.getOutputStream().flush();
                 }
                 else
@@ -196,8 +193,6 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
     {
         try
         {
-//            if (debugLog)
-//                logger.info(CLASS_NAME + ".processPendingCaptions: processing pending captions: " + captionLines);
             List<Caption> captions = new ArrayList<>();
             for (Map.Entry<String, LinkedList<CaptionLine>> entry : captionLines.entrySet())
             {
@@ -209,7 +204,7 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
                     Instant start = null;
                     Instant end = null;
                     List<String> textList = new ArrayList<>();
-                    if (lines.size() > maxLineCount || (!lines.isEmpty() && lines.peekLast().getTimeAdded() < System.currentTimeMillis() - delay / 2))
+                    if (doQuit || lines.size() > maxLineCount || (!lines.isEmpty() && lines.peekLast().getTimeAdded() < System.currentTimeMillis() - delay / 2))
                     {
                         while (textList.size() < maxLineCount && !lines.isEmpty())
                         {
@@ -251,27 +246,17 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
     public void close()
     {
         logger.info(CLASS_NAME + ".close()");
-        Executors.newSingleThreadScheduledExecutor().schedule(this::delayedClose, delay, TimeUnit.MILLISECONDS);
-    }
-
-    private void delayedClose()
-    {
-        logger.info(CLASS_NAME + ".delayedClose()");
-        doQuit = true;
-        if (runningThread != null)
-            runningThread.interrupt();
-        if (socket != null && !socket.isClosed())
+        if (socket != null)
         {
             try
             {
-                socket.close();
+                socket.shutdownOutput();
             }
             catch (IOException e)
             {
-                throw new RuntimeException(e);
+                logger.error(CLASS_NAME + ".close: Error closing socket: " + e, e);
             }
         }
-        socket = null;
     }
 
     private void handleWhisperResponse(WhisperResponse response)
@@ -352,6 +337,8 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
             try (InputStream inputStream = socket.getInputStream())
             {
                 parseJsonStream(inputStream);
+                doQuit = true;
+                processPendingCaptions();
             }
             catch (SocketException s)
             {

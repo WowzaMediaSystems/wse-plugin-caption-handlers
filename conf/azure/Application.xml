@@ -187,15 +187,23 @@
 		<LiveStreamPacketizer>
 			<!-- Properties defined here will override any properties defined in conf/LiveStreamPacketizers.xml for any LiveStreamPacketizers loaded by this applications -->
 			<Properties>
+				<Property>
+					<Name>cupertinoChunkDurationTarget</Name>
+					<Value>6000</Value>
+				</Property>
+				<Property>
+					<Name>cupertinoMaxChunkCount</Name>
+					<Value>10</Value>
+				</Property>
+				<Property>
+					<Name>cupertinoPlaylistChunkCount</Name>
+					<Value>6</Value>
+				</Property>
 			</Properties>
 		</LiveStreamPacketizer>
 		<HTTPStreamer>
 			<!-- Properties defined here will override any properties defined in conf/HTTPStreamers.xml for any HTTPStreamer loaded by this applications -->
 			<Properties>
-<!--				<Property>-->
-<!--					<Name>cupertinoLiveCaptionsUseWebVTT</Name>-->
-<!--					<Value>true</Value>-->
-<!--				</Property>-->
 			</Properties>
 		</HTTPStreamer>
 		<Manager>
@@ -209,26 +217,6 @@
 		</Repeater>
 		<StreamRecorder>
 			<Properties>
-				<Property>
-					<Name>streamRecorderRecordAllStreams</Name>
-					<Value>false</Value>
-				</Property>
-				<Property>
-					<Name>streamRecorderRecordType</Name>
-					<Value>allow</Value>
-				</Property>
-				<Property>
-					<Name>streamRecorderStreamNames</Name>
-					<Value>myStream_delayed_source</Value>
-				</Property>
-				<Property>
-					<Name>streamRecorderRecordData</Name>
-					<Value>true</Value>
-				</Property>
-				<Property>
-					<Name>streamRecorderSkipKeyFrameUntilAudioTimeout</Name>
-					<Value>0</Value>
-				</Property>
 			</Properties>
 		</StreamRecorder>
 		<Modules>
@@ -251,20 +239,20 @@
 			</Property>
 			<Property>
 				<Name>speechToTextSubscriptionKey</Name>
-				<Value>FCvaquerbU23z89lETHvga5uMSFoNxHVdWa0qrAy51VUEE6cyanxJQQJ99BBACmepeSXJ3w3AAAYACOGyV15</Value>
+				<Value>[azure-speech-services-subscription-key]</Value>
 			</Property>
 			<Property>
 				<Name>speechToTextServiceRegion</Name>
-				<Value>uksouth</Value>
+				<Value>[azure-speech-services-subscription-region]</Value>
 			</Property>
 			<Property>
 				<Name>captionHandlerDebug</Name>
 				<Value>true</Value>
 			</Property>
-<!--			<Property>-->
-<!--				<Name>captionHandlerDelayedStreamDebugLog</Name>-->
-<!--				<Value>false</Value>-->
-<!--			</Property>-->
+			<Property>
+				<Name>captionHandlerStreamDelay</Name>
+				<Value>10000</Value>
+			</Property>
 			<Property>
 				<Name>speechToTextPhraseList</Name>
 				<Value>Wowza Video; VOD encoder; Pirate Mouse</Value>

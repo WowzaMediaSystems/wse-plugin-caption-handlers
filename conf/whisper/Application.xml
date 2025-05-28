@@ -72,11 +72,11 @@
 			<VODTimedTextProviders></VODTimedTextProviders>
 			<!-- Properties for TimedText -->
 			<Properties>
-				<Property>
-					<Name>captionLiveIngestLanguages</Name>
+<!--				<Property>-->
+<!--					<Name>captionLiveIngestLanguages</Name>-->
 <!--					<Value>en</Value>-->
 <!--					<Value>en,es,fr,de,zh</Value>-->
-				</Property>
+<!--				</Property>-->
 			</Properties>
 		</TimedText>
 		<!-- HTTPStreamers (separate with commas): cupertinostreaming, smoothstreaming, sanjosestreaming, mpegdashstreaming, dvrchunkstreaming -->
@@ -187,6 +187,18 @@
 		<LiveStreamPacketizer>
 			<!-- Properties defined here will override any properties defined in conf/LiveStreamPacketizers.xml for any LiveStreamPacketizers loaded by this applications -->
 			<Properties>
+				<Property>
+					<Name>cupertinoChunkDurationTarget</Name>
+					<Value>6000</Value>
+				</Property>
+				<Property>
+					<Name>cupertinoMaxChunkCount</Name>
+					<Value>10</Value>
+				</Property>
+				<Property>
+					<Name>cupertinoPlaylistChunkCount</Name>
+					<Value>6</Value>
+				</Property>
 			</Properties>
 		</LiveStreamPacketizer>
 		<HTTPStreamer>
@@ -225,10 +237,10 @@
 				<Name>whisperCaptionsEnabled</Name>
 				<Value>true</Value>
 			</Property>
-<!--			<Property>-->
-<!--				<Name>captionHandlerStreamDelay</Name>-->
-<!--				<Value>10000</Value>-->
-<!--			</Property>-->
+			<Property>
+				<Name>captionHandlerStreamDelay</Name>
+				<Value>10000</Value>
+			</Property>
 			<Property>
 				<Name>whisperSocketHost</Name>
 				<Value>whisper.server</Value>

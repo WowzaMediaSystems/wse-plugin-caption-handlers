@@ -3,6 +3,7 @@ services:
     trial:
         hostname: wse.docker
         image: wowza/wowza-streaming-engine:latest-trial
+        platform: linux/amd64
         env_file: .env
         environment:
             - WSE_LICENSE_KEY=$WSE_LICENSE_KEY

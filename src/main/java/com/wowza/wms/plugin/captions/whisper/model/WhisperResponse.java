@@ -1,11 +1,13 @@
+/*
+ * This code and all components (c) Copyright 2006 - 2025, Wowza Media Systems, LLC.  All rights reserved.
+ * This code is licensed pursuant to the Wowza Public License version 1.0, available at www.wowza.com/legal.
+ */
+
 package com.wowza.wms.plugin.captions.whisper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wowza.wms.timedtext.model.ITimedTextConstants;
-
-import java.time.Instant;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WhisperResponse

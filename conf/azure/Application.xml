@@ -257,15 +257,6 @@
 				<Name>speechToTextPhraseList</Name>
 				<Value>Wowza Video; VOD encoder; Pirate Mouse</Value>
 			</Property>
-			<Property>
-				<Name>liveStreamRecordMinimumKeyFramesInPacketList</Name>
-				<Value>0</Value>
-			</Property>
-			<Property>
-				<Name>pushPublishMapPath</Name>
-				<Value>${com.wowza.wms.context.VHostConfigHome}/conf/${com.wowza.wms.context.Application}/PushPublishMap.txt</Value>
-				<Type>String</Type>
-			</Property>
 		</Properties>
 	</Application>
 </Root>

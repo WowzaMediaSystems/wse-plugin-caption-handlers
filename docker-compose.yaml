@@ -10,10 +10,10 @@ services:
             - ADMIN_PASSWORD=password
             - IPWHITELIST=*
             - TRANSCODER=enabled #enabled | disabled | remove to not change
-            - LOG_LEVEL=INFO
-            #DEBUG INFO WARN ERROR
-        #to persist the configurations between starts of Wowza Streaming Engine, uncomment the lines below:
+            - LOG_LEVEL=INFO #DEBUG INFO WARN ERROR
+            - SIMU_LIVE=disabled
         volumes:
+#to persist the configurations between starts of Wowza Streaming Engine, uncomment the lines below:
 #            - ./wse/applications:/usr/local/WowzaStreamingEngine/applications
 #            - ./wse/conf:/usr/local/WowzaStreamingEngine/conf
 #            - ./wse/content:/usr/local/WowzaStreamingEngine/content
@@ -35,7 +35,6 @@ services:
             - MODEL=tiny.en # tiny.en, base.en, small.en, medium.en, large-v3
             - LOG_LEVEL=INFO
             - MIN_CHUNK_SIZE=1
-#            - SOURCE_STREAM=rtmp://wse.docker/live/myStream_160p
         ports:
             - 3000:3000
         volumes:
@@ -48,5 +47,3 @@ services:
             - LOG_LEVEL=WARN #DEBUG INFO WARN ERROR
         ports:
             - 8088:8080
-#        volumes:
-#            - ~/Downloads:/downloads

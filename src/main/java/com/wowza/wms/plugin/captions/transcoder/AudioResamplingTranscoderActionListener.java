@@ -15,7 +15,13 @@ import com.wowza.wms.transcoder.model.LiveStreamTranscoder;
 import com.wowza.wms.transcoder.model.TranscoderSessionAudio;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import static com.wowza.wms.plugin.captions.ModuleCaptionsBase.DELAYED_STREAM_SUFFIX;
@@ -25,6 +31,21 @@ public abstract class AudioResamplingTranscoderActionListener extends CaptionsTr
     protected final IApplicationInstance appInstance;
     private final Map<String, SpeechHandler> handlers;
     private final Map<String, DelayedStream> delayedStreams;
+
+    private static final Path resampleTemplate;
+
+    static {
+        try (InputStream in = Objects.requireNonNull(AudioResamplingTranscoderActionListener.class.getResourceAsStream("/transcoder/templates/audioResample.xml")))
+        {
+            resampleTemplate = new File(System.getProperty("java.io.tmpdir"), "audioResample.xml").toPath();
+            resampleTemplate.toFile().deleteOnExit();
+            Files.copy(in, resampleTemplate, StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("Failed to create temporary file for audio resampling template", e);
+        }
+    }
 
     public AudioResamplingTranscoderActionListener(IApplicationInstance appInstance, Map<String, SpeechHandler> handlers, Map<String, DelayedStream> delayedStreams)
     {
@@ -36,25 +57,9 @@ public abstract class AudioResamplingTranscoderActionListener extends CaptionsTr
     @Override
     public void onInitBeforeLoadTemplate(LiveStreamTranscoder transcoder)
     {
-        System.out.println("AudioResamplingTranscoderActionListener.onInitBeforeLoadTemplate");
         super.onInitBeforeLoadTemplate(transcoder);
         if (!transcoder.getStreamName().endsWith(DELAYED_STREAM_SUFFIX))
-        {
-            String resampleTemplate = "audioResample.xml";
-            String templateDir = transcoder.getTemplateDir();
-            if (!(new File(templateDir, resampleTemplate).exists()))
-            {
-                String appName = appInstance.getApplication().getName();
-                String appInstanceName = appInstance.getName();
-                String regex = String.format("(/%s|/%s)", appName, appInstanceName);
-                templateDir = templateDir.replaceAll(regex, "");
-            }
-            if (new File(templateDir, resampleTemplate).exists())
-            {
-                transcoder.setTemplateName(resampleTemplate);
-                transcoder.setTemplateDir(templateDir);
-            }
-        }
+            transcoder.setTemplateName(resampleTemplate.toUri().toString());
     }
 
     @Override

@@ -20,12 +20,12 @@ services:
 #            - ./wse/transcoder:/usr/local/WowzaStreamingEngine/transcoder
             - ./conf:/usr/local/WowzaStreamingEngine/conf.addon
             - ./build/libs:/usr/local/WowzaStreamingEngine/lib.addon
-            - ./src/main/resources/transcoder:/usr/local/WowzaStreamingEngine/transcoder.addon
         ports:
             - 8087:8087
             - 80:80
             - 443:443
             - 1935:1935
+
     whisper_server:
         hostname: whisper.server
         image: wowza/whisper_streaming:1.0.0

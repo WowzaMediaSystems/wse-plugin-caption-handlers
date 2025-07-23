@@ -47,8 +47,8 @@ services:
             - MODEL=tiny.en # tiny.en, base.en, small.en, medium.en, large-v3
             - LOG_LEVEL=INFO
             - MIN_CHUNK_SIZE=1
-            - REPORT_LANGUAGES=en
             - SOURCE_LANGUAGE=en
+            - REPORT_LANGUAGES=en
         ports:
             - 3000:3000
         volumes:

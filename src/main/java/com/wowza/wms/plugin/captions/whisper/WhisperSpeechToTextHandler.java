@@ -19,6 +19,7 @@ import com.wowza.wms.application.WMSProperties;
 import com.wowza.wms.logging.WMSLogger;
 import com.wowza.wms.logging.WMSLoggerFactory;
 import com.wowza.wms.plugin.captions.whisper.model.*;
+import com.wowza.wms.timedtext.model.ITimedTextConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
+import static com.wowza.wms.plugin.captions.ModuleAzureSpeechToTextCaptions.PROP_DEFAULT_CAPTION_LANGUAGES;
 import static com.wowza.wms.plugin.captions.ModuleCaptionsBase.*;
 import static com.wowza.wms.plugin.captions.stream.DelayedStream.DEFAULT_START_DELAY;
 
@@ -46,6 +49,7 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
     private Socket socket;
     private SocketListener socketListener;
 
+    private final Map<String, String> languageMap;
     private final boolean debugLog;
     private final int maxLineLength;
     private final int maxLineCount;
@@ -58,11 +62,7 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
 
     private volatile boolean doQuit = false;
     private volatile boolean outputRunning = false;
-    private final String[] lineTerminators;
 
-    private Thread runningThread;
-
-//    private WebSocket websocket;
     private int retryCount = 0;
 
     public WhisperSpeechToTextHandler(IApplicationInstance appInstance, CaptionHandler captionHandler)
@@ -74,9 +74,18 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
         this.debugLog = props.getPropertyBoolean(PROP_CAPTIONS_DEBUG_LOG, false);
         this.maxLineLength = props.getPropertyInt(PROP_MAX_CAPTION_LINE_LENGTH, CaptionHelper.defaultMaxLineLengthSBCS);
         this.maxLineCount = props.getPropertyInt(PROP_MAX_CAPTION_LINE_COUNT, 2);
-        this.lineTerminators = props.getPropertyStr(PROP_LINE_TERMINATORS, DEFAULT_FIRST_PASS_TERMINATORS).split("\\|");
         this.newLineThreshold = props.getPropertyInt(PROP_NEW_LINE_THRESHOLD, DEFAULT_NEW_LINE_THRESHOLD);
         this.delay = props.getPropertyLong(PROP_CAPTIONS_STREAM_DELAY, DEFAULT_START_DELAY);
+
+        String languagesStr = appInstance.getTimedTextProperties().getPropertyStr(PROP_DEFAULT_CAPTION_LANGUAGES, ITimedTextConstants.LANGUAGE_ID_ENGLISH);
+        languageMap = Arrays.stream(languagesStr.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.toMap(
+                        s -> toLocale(s).getLanguage(),
+                        s -> s,
+                        (existing, replacement) -> existing));
+
         this.socketHost = props.getPropertyStr("whisperSocketHost", "localhost");
         this.socketPort = props.getPropertyInt("whisperSocketPort", 3000);
         try
@@ -138,7 +147,6 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
     @Override
     public void run()
     {
-        runningThread = Thread.currentThread();
         while (!doQuit)
         {
             try
@@ -247,7 +255,7 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
     {
         if (debugLog)
             logger.info(CLASS_NAME + ".handleWhisperResponse: response: " + response);
-        String language = response.getLanguage();
+        String language = languageMap.getOrDefault(response.getLanguage(), response.getLanguage());
         LinkedList<CaptionLine> lines = captionLines.computeIfAbsent(language, k -> new LinkedList<>());
         synchronized (lines)
         {

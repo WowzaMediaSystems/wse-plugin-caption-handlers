@@ -72,10 +72,10 @@
 			<VODTimedTextProviders></VODTimedTextProviders>
 			<!-- Properties for TimedText -->
 			<Properties>
-				<Property>
-					<Name>captionLiveIngestLanguages</Name>
-					<Value>en</Value>
-				</Property>
+<!--				<Property>-->
+<!--					<Name>captionLiveIngestLanguages</Name>-->
+<!--					<Value>eng</Value>-->
+<!--				</Property>-->
 			</Properties>
 		</TimedText>
 		<!-- HTTPStreamers (separate with commas): cupertinostreaming, smoothstreaming, sanjosestreaming, mpegdashstreaming, dvrchunkstreaming -->
@@ -238,7 +238,7 @@
 			</Property>
 			<Property>
 				<Name>captionHandlerDebug</Name>
-				<Value>true</Value>
+				<Value>false</Value>
 			</Property>
 		</Properties>
 	</Application>

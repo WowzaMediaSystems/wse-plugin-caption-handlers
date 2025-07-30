@@ -10,7 +10,7 @@ services:
             - ADMIN_PASSWORD=password
             - IPWHITELIST=*
             - TRANSCODER=enabled #enabled | disabled | remove to not change
-            - LOG_LEVEL=WARN #DEBUG INFO WARN ERROR
+            - LOG_LEVEL=INFO #DEBUG INFO WARN ERROR
             - SIMU_LIVE=disabled
         volumes:
 #to persist the configurations between starts of Wowza Streaming Engine, uncomment the lines below:
@@ -20,7 +20,7 @@ services:
 #            - ./wse/logs:/usr/local/WowzaStreamingEngine/logs
 #            - ./wse/transcoder:/usr/local/WowzaStreamingEngine/transcoder
             - ./conf:/usr/local/WowzaStreamingEngine/conf.addon
-            - ./build/libs:/usr/local/WowzaStreamingEngine/lib.addon
+            - ./lib:/usr/local/WowzaStreamingEngine/lib.addon
         ports:
             - 8087:8087
             - 80:80
@@ -37,7 +37,7 @@ services:
             context: wowza_setup
         restart: "no"
         volumes:
-            - ./build/libs:/wowza_setup/downloads
+            - ./lib:/wowza_setup/downloads
 
     whisper_server:
         hostname: whisper.server

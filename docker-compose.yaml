@@ -10,13 +10,14 @@ services:
             - ADMIN_PASSWORD=password
             - IPWHITELIST=*
             - TRANSCODER=enabled #enabled | disabled | remove to not change
-            - LOG_LEVEL=INFO #DEBUG INFO WARN ERROR
+            - LOG_LEVEL=WARN #DEBUG INFO WARN ERROR
             - SIMU_LIVE=disabled
         volumes:
 #to persist the configurations between starts of Wowza Streaming Engine, uncomment the lines below:
 #            - ./wse/applications:/usr/local/WowzaStreamingEngine/applications
 #            - ./wse/conf:/usr/local/WowzaStreamingEngine/conf
 #            - ./wse/content:/usr/local/WowzaStreamingEngine/content
+#            - ./wse/logs:/usr/local/WowzaStreamingEngine/logs
 #            - ./wse/transcoder:/usr/local/WowzaStreamingEngine/transcoder
             - ./conf:/usr/local/WowzaStreamingEngine/conf.addon
             - ./build/libs:/usr/local/WowzaStreamingEngine/lib.addon
@@ -25,15 +26,28 @@ services:
             - 80:80
             - 443:443
             - 1935:1935
+            - 6970-6999:6970-6999/udp
+        depends_on:
+            wowza_setup:
+                condition: service_completed_successfully
+
+    wowza_setup:
+        image: wowza_setup:latest
+        build:
+            context: wowza_setup
+        restart: "no"
+        volumes:
+            - ./build/libs:/wowza_setup/downloads
 
     whisper_server:
         hostname: whisper.server
-        image: wowza/whisper_streaming:1.0.0
+        image: wowza/whisper_streaming:latest
         #platform: linux/arm64
         environment:
             - MODEL=tiny.en # tiny.en, base.en, small.en, medium.en, large-v3
             - LOG_LEVEL=INFO
             - MIN_CHUNK_SIZE=1
+            - REPORT_LANGUAGE=en
         ports:
             - 3000:3000
         volumes:
@@ -44,5 +58,6 @@ services:
         image: wowza/wowza-streaming-engine-manager:latest
         environment:
             - LOG_LEVEL=WARN #DEBUG INFO WARN ERROR
+            - WSE_HOST=http://wse.docker:8087
         ports:
             - 8088:8080

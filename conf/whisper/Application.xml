@@ -72,11 +72,10 @@
 			<VODTimedTextProviders></VODTimedTextProviders>
 			<!-- Properties for TimedText -->
 			<Properties>
-<!--				<Property>-->
-<!--					<Name>captionLiveIngestLanguages</Name>-->
-<!--					<Value>en</Value>-->
-<!--					<Value>en,es,fr,de,zh</Value>-->
-<!--				</Property>-->
+				<Property>
+					<Name>captionLiveIngestLanguages</Name>
+					<Value>en</Value>
+				</Property>
 			</Properties>
 		</TimedText>
 		<!-- HTTPStreamers (separate with commas): cupertinostreaming, smoothstreaming, sanjosestreaming, mpegdashstreaming, dvrchunkstreaming -->
@@ -128,7 +127,7 @@
 			<!--  IP address, transport, and port used for WebRTC streaming. -->
 			<!--TCP format: [wowza-streaming-engine-external-ip-address],tcp,[port] -->
 			<!--UDP format: [wowza-streaming-engine-external-ip-address],udp -->
-			<IceCandidateIpAddresses>wse-trial.wowza.com,tcp,1935|127.0.0.1,udp</IceCandidateIpAddresses>
+			<IceCandidateIpAddresses>wse-demo.wowza.com,tcp,1935|127.0.0.1,udp</IceCandidateIpAddresses>
 			<!-- Local IP address of the network card you want to use for WebRTC UDP traffic -->
 			<UDPBindAddress></UDPBindAddress>
 			<!-- Comma-deliniated list of audio codecs, in order of preference, for stream ingestion -->
@@ -187,18 +186,6 @@
 		<LiveStreamPacketizer>
 			<!-- Properties defined here will override any properties defined in conf/LiveStreamPacketizers.xml for any LiveStreamPacketizers loaded by this applications -->
 			<Properties>
-				<Property>
-					<Name>cupertinoChunkDurationTarget</Name>
-					<Value>6000</Value>
-				</Property>
-				<Property>
-					<Name>cupertinoMaxChunkCount</Name>
-					<Value>10</Value>
-				</Property>
-				<Property>
-					<Name>cupertinoPlaylistChunkCount</Name>
-					<Value>6</Value>
-				</Property>
 			</Properties>
 		</LiveStreamPacketizer>
 		<HTTPStreamer>

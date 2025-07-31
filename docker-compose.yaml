@@ -1,6 +1,6 @@
-name: Wowza Streaming Engine Trial
+name: Wowza Streaming Engine Caption Handlers
 services:
-    trial:
+    wse:
         hostname: wse.docker
         image: wowza/wowza-streaming-engine:latest-trial
         platform: linux/amd64

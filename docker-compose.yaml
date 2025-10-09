@@ -2,7 +2,7 @@ name: Wowza Streaming Engine Caption Handlers
 services:
     wse:
         hostname: wse.docker
-        image: wowza/wowza-streaming-engine:latest-trial
+        image: wowza/wowza-streaming-engine:4.9.4-trial
         platform: linux/amd64
         environment:
             - WSE_LICENSE_KEY=$WSE_LICENSE_KEY
@@ -51,14 +51,13 @@ services:
         #           capabilities: [gpu]
         #           count: 1
         environment:
-            - MODEL=tiny.en # tiny.en, base.en, small.en, medium.en, large-v3
+            - MODEL=tiny.en # tiny.en, base.en, small.en, medium.en, large-v3, large-v3-turbo
             - LOG_LEVEL=INFO
             - MIN_CHUNK_SIZE=1
             - SOURCE_LANGUAGE=en
             - REPORT_LANGUAGES=en
             # - TRANSLATE_HOST=libretranslate.server
             # - TRANSLATE_PORT=5000
-            # - MODEL=large-v3-turbo
             # - USE_GPU=True
             # - FP16=true            
         ports:

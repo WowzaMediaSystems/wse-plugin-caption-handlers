@@ -49,7 +49,6 @@ To run whisper with GPU and docker compose, uncomment the following lines:
         #           count: 1
 ...        
 
-            # - MODEL=large-v3-turbo
             # - USE_GPU=True
             # - FP16=true
 ...

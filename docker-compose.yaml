@@ -42,17 +42,41 @@ services:
     whisper_server:
         hostname: whisper.server
         image: wowza/whisper_streaming:latest
-        #platform: linux/arm64
+        # runtime: nvidia
+        # deploy:
+        #   resources:
+        #     reservations:
+        #       devices:
+        #         - driver: nvidia
+        #           capabilities: [gpu]
+        #           count: 1
         environment:
             - MODEL=tiny.en # tiny.en, base.en, small.en, medium.en, large-v3
             - LOG_LEVEL=INFO
             - MIN_CHUNK_SIZE=1
             - SOURCE_LANGUAGE=en
             - REPORT_LANGUAGES=en
+            # - TRANSLATE_HOST=libretranslate.server
+            # - TRANSLATE_PORT=5000
+            # - MODEL=large-v3-turbo
+            # - USE_GPU=True
+            # - FP16=true            
         ports:
             - 3000:3000
         volumes:
             - ./model_cache:/tmp
+
+    # libretranslate_server:
+    #     hostname: libretranslate.server
+    #     image: libretranslate/libretranslate:latest
+    #     # image: libretranslate/libretranslate:latest-cuda 
+    #     environment:
+    #         - LT_LOAD_ONLY=en,fr,es,de,ja
+    #     ports:
+    #         - 5001:5000
+    #     volumes:
+    #         - /tmp/libretranslate_models_cache:/home/libretranslate/.local
+
 
     manager:
         hostname: wsem.docker

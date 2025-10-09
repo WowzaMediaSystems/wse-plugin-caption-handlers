@@ -35,6 +35,62 @@ https://www.wowza.com/testplayers?src=https://wse-demo.wowza.com/whisper/myStrea
 ## Configuration
 See the included Application.xml files for the module configurations.
 
+### Whisper
+To run whisper with GPU and docker compose, uncomment the following lines:
+```
+...
+        # runtime: nvidia
+        # deploy:
+        #   resources:
+        #     reservations:
+        #       devices:
+        #         - driver: nvidia
+        #           capabilities: [gpu]
+        #           count: 1
+...        
+
+            # - MODEL=large-v3-turbo
+            # - USE_GPU=True
+            # - FP16=true
+...
+```
+
+### Translation
+To run translation and docker compose, uncomment the following lines:
+```
+...
+            # - TRANSLATE_HOST=libretranslate.server
+            # - TRANSLATE_PORT=5000
+
+...
+    # libretranslate_server:
+    #     hostname: libretranslate.server
+    #     image: libretranslate/libretranslate:latest
+    #     # image: libretranslate/libretranslate:latest-cuda 
+    #     environment:
+    #         - LT_LOAD_ONLY=en,fr,es,de,ja
+    #     ports:
+    #         - 5001:5000
+    #     volumes:
+    #         - /tmp/libretranslate_models_cache:/home/libretranslate/.local
+...
+```
+Update the `REPORT_LANGUAGES` environement variable in the docker compose file to match what languages you want to translate to.
+```
+            - REPORT_LANGUAGES=en,fr,es,de,ja
+```
+Match those langauges with this section in `whisper/Application.xml`
+```
+		<TimedText>
+...
+			<Properties>
+				<Property>-->
+					<Name>captionLiveIngestLanguages</Name>
+					<Value>en,fr,es,de,ja</Value>
+				</Property>
+			</Properties>
+```
+
 ## More resources
 For full install instructions and to use the compiled version of these modules, see the following articles:
 

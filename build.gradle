@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.wowza.wms.plugin.captions'
-version '1.0.0'
+version '1.1.0'
 
 java {
     toolchain {
@@ -51,8 +51,14 @@ tasks.register('copyDeps', Copy) {
     into layout.buildDirectory.dir("libs")
 }
 
+tasks.register('copyLibsForDocker', Copy) {
+    dependsOn jar, copyDeps
+    from layout.buildDirectory.dir("libs")
+    into layout.projectDirectory.dir("lib")
+}
+
 jar.configure {
-    dependsOn (copyDeps)
+    finalizedBy (copyLibsForDocker)
 }
 
 tasks.withType(Jar).configureEach {
@@ -71,6 +77,10 @@ tasks.withType(Jar).configureEach {
         from files('LICENSE.txt')
     }
     archiveBaseName = 'wse-plugin-' + projectName
+}
+
+clean.configure {
+    delete layout.projectDirectory.dir("lib")
 }
 
 gitProperties {

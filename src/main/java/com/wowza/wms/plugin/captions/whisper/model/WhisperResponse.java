@@ -7,13 +7,14 @@ package com.wowza.wms.plugin.captions.whisper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wowza.wms.timedtext.model.ITimedTextConstants;
+
+import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WhisperResponse
 {
     @JsonProperty
-    private String language = ITimedTextConstants.LANGUAGE_ID_ENGLISH;
+    private String language = Locale.ENGLISH.getLanguage();
     @JsonProperty
     private String text;
     @JsonProperty

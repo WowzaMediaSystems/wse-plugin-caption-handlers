@@ -74,8 +74,7 @@
 			<Properties>
 <!--				<Property>-->
 <!--					<Name>captionLiveIngestLanguages</Name>-->
-<!--					<Value>en</Value>-->
-<!--					<Value>en,es,fr,de,zh</Value>-->
+<!--					<Value>eng</Value>-->
 <!--				</Property>-->
 			</Properties>
 		</TimedText>
@@ -187,18 +186,6 @@
 		<LiveStreamPacketizer>
 			<!-- Properties defined here will override any properties defined in conf/LiveStreamPacketizers.xml for any LiveStreamPacketizers loaded by this applications -->
 			<Properties>
-				<Property>
-					<Name>cupertinoChunkDurationTarget</Name>
-					<Value>10000</Value>
-				</Property>
-				<Property>
-					<Name>cupertinoMaxChunkCount</Name>
-					<Value>10</Value>
-				</Property>
-				<Property>
-					<Name>cupertinoPlaylistChunkCount</Name>
-					<Value>6</Value>
-				</Property>
 			</Properties>
 		</LiveStreamPacketizer>
 		<HTTPStreamer>
@@ -251,7 +238,7 @@
 			</Property>
 			<Property>
 				<Name>captionHandlerDebug</Name>
-				<Value>true</Value>
+				<Value>false</Value>
 			</Property>
 		</Properties>
 	</Application>

@@ -23,3 +23,5 @@ gradle-app.setting
 .env
 wse
 model_cache
+libretranslate_models
+lib

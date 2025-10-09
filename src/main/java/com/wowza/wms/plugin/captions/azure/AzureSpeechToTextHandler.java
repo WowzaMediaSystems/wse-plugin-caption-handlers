@@ -15,6 +15,7 @@ import com.wowza.wms.plugin.captions.caption.Caption;
 import com.wowza.wms.plugin.captions.caption.CaptionHandler;
 import com.wowza.wms.plugin.captions.caption.CaptionHelper;
 import com.wowza.wms.plugin.captions.caption.CaptionTiming;
+import com.wowza.wms.timedtext.model.ITimedTextConstants;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -35,11 +36,12 @@ public class AzureSpeechToTextHandler implements SpeechHandler
     private final Semaphore semaphore = new Semaphore(0);
     private final SpeechConfig speechConfig;
     private final String recognitionLanguage;
-    private final int maxLineLength;
-    private final int maxLines;
-    private final List<String> languages;
+    private final Map<String, String> languageMap;
+    private final List<String> translationLanguages;
     private final List<String> phrases;
     private final boolean debugLog;
+    private final int maxLineLength;
+    private final int maxLines;
     private final String firstPassTerminators;
     private final int firstPassPercentage;
 
@@ -54,13 +56,22 @@ public class AzureSpeechToTextHandler implements SpeechHandler
         maxLineLength = props.getPropertyInt(PROP_MAX_CAPTION_LINE_LENGTH, CaptionHelper.defaultMaxLineLengthSBCS);
         maxLines = props.getPropertyInt(PROP_MAX_CAPTION_LINE_COUNT, 2);
         this.captionHandler = captionHandler;
-        recognitionLanguage = props.getPropertyStr(PROP_RECOGNITION_LANGUAGE, DEFAULT_RECOGNITION_LANGUAGE);
+        recognitionLanguage = toLocale(props.getPropertyStr(PROP_RECOGNITION_LANGUAGE, DEFAULT_RECOGNITION_LANGUAGE))
+                .toLanguageTag();
+        if (!isBCP47WithRegion(recognitionLanguage))
+            throw new RuntimeException("Invalid recognition language: " + recognitionLanguage);
 
-        String languagesStr = appInstance.getTimedTextProperties().getPropertyStr(PROP_DEFAULT_CAPTION_LANGUAGES, Locale.getDefault().getISO3Language());
-        languages = Arrays.stream(languagesStr.split(","))
+        String languagesStr = appInstance.getTimedTextProperties().getPropertyStr(PROP_DEFAULT_CAPTION_LANGUAGES, ITimedTextConstants.LANGUAGE_ID_ENGLISH);
+        languageMap = Arrays.stream(languagesStr.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
-                .filter(s -> !s.equalsIgnoreCase(Locale.forLanguageTag(recognitionLanguage).getLanguage()))
+                .collect(Collectors.toMap(
+                        s -> toLocale(s).getLanguage(),
+                        s -> s,
+                        (existing, replacement) -> existing));
+
+        translationLanguages = languageMap.keySet().stream()
+                .filter(lang -> !lang.equals(Locale.forLanguageTag(recognitionLanguage).getLanguage()))
                 .collect(Collectors.toList());
         String phraseStr = props.getPropertyStr(PROP_PHRASE_LIST, "");
         phrases = Arrays.stream(phraseStr.split(";"))
@@ -68,8 +79,8 @@ public class AzureSpeechToTextHandler implements SpeechHandler
                 .filter(s -> !s.isBlank())
                 .collect(Collectors.toList());
 
-        speechConfig = languages.isEmpty() ? SpeechConfig.fromSubscription(subscriptionKey, serviceRegion) :
-                SpeechTranslationConfig.fromSubscription(subscriptionKey, serviceRegion);
+        speechConfig = translationLanguages.isEmpty() ? SpeechConfig.fromSubscription(subscriptionKey, serviceRegion) :
+                       SpeechTranslationConfig.fromSubscription(subscriptionKey, serviceRegion);
         speechConfig.setSpeechRecognitionLanguage(recognitionLanguage);
 
         ProfanityOption profanityOption = ProfanityOption.Masked;
@@ -91,7 +102,7 @@ public class AzureSpeechToTextHandler implements SpeechHandler
         {
             Recognizer recognizer;
             if (speechConfig instanceof SpeechTranslationConfig) {
-                languages.forEach(lang -> ((SpeechTranslationConfig) speechConfig).addTargetLanguage(lang));
+                translationLanguages.forEach(lang -> ((SpeechTranslationConfig) speechConfig).addTargetLanguage(lang));
                 recognizer = new TranslationRecognizer((SpeechTranslationConfig) speechConfig, audioConfig);
             }
             else
@@ -171,14 +182,14 @@ public class AzureSpeechToTextHandler implements SpeechHandler
     private void handleResult(RecognitionResult result, Instant start, Instant end)
     {
         CaptionTiming captionTiming = new CaptionTiming(start, end);
-        List<Caption> sourceCaptions = CaptionHelper.getCaptions(Locale.forLanguageTag(recognitionLanguage).getLanguage(), maxLineLength, maxLines,
+        List<Caption> sourceCaptions = CaptionHelper.getCaptions(languageMap.get(Locale.forLanguageTag(recognitionLanguage).getLanguage()), maxLineLength, maxLines,
 				firstPassTerminators, firstPassPercentage, captionTiming, result.getText());
         sourceCaptions.forEach(captionHandler::handleCaption);
 
         if (result instanceof TranslationRecognitionResult)
         {
             ((TranslationRecognitionResult)result).getTranslations().forEach((language, translation) -> {
-                List<Caption> translatedCaptions = CaptionHelper.getCaptions(Locale.forLanguageTag(language).getLanguage(), maxLineLength, maxLines,
+                List<Caption> translatedCaptions = CaptionHelper.getCaptions(languageMap.get(language), maxLineLength, maxLines,
                         firstPassTerminators, firstPassPercentage, captionTiming, translation);
                 translatedCaptions.forEach(captionHandler::handleCaption);
             });

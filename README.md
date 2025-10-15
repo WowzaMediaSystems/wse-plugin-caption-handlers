@@ -53,7 +53,12 @@ To run whisper with GPU and docker compose, uncomment the following lines:
             # - FP16=true
 ...
 ```
-
+Update the whisper docker image to use the gpu image:
+```
+    whisper_server:
+        hostname: whisper.server
+        image: wowza/whisper_streaming:1.1.0-gpu
+```
 ### Translation
 To run translation and docker compose, uncomment the following lines:
 ```

@@ -83,7 +83,7 @@ Update the `REPORT_LANGUAGES` environment variable in the Docker Compose file to
 ```
             - REPORT_LANGUAGES=en,fr,es,de,ja
 ```
-Match those languages with this section in `whisper/Application.xml`
+Match those languages with this section in [`whisper/Application.xml`](https://github.com/WowzaMediaSystems/wse-plugin-caption-handlers/blob/main/conf/whisper/Application.xml)
 ```
 		<TimedText>
 ...

@@ -83,7 +83,7 @@ Update the `REPORT_LANGUAGES` environment variable in the Docker Compose file to
 ```
             - REPORT_LANGUAGES=en,fr,es,de,ja
 ```
-Match those langauges with this section in `whisper/Application.xml`
+Match those languages with this section in `whisper/Application.xml`
 ```
 		<TimedText>
 ...

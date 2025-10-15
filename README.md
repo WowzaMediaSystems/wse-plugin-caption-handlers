@@ -57,7 +57,7 @@ Update the whisper docker image to use the gpu image:
 ```
     whisper_server:
         hostname: whisper.server
-        image: wowza/whisper_streaming:1.1.0-gpu
+        image: wowza/whisper_streaming:latest-gpu
 ```
 ### Translation
 To run translation and docker compose, uncomment the following lines:

@@ -79,7 +79,7 @@ To run translation and docker compose, uncomment the following lines:
     #         - /tmp/libretranslate_models_cache:/home/libretranslate/.local
 ...
 ```
-Update the `REPORT_LANGUAGES` environement variable in the docker compose file to match what languages you want to translate to.
+Update the `REPORT_LANGUAGES` environment variable in the Docker Compose file to match what languages you want to translate to.
 ```
             - REPORT_LANGUAGES=en,fr,es,de,ja
 ```

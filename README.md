@@ -88,7 +88,7 @@ Match those languages with this section in [`whisper/Application.xml`](https://g
 		<TimedText>
 ...
 			<Properties>
-				<Property>-->
+				<Property>
 					<Name>captionLiveIngestLanguages</Name>
 					<Value>en,fr,es,de,ja</Value>
 				</Property>

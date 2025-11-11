@@ -58,9 +58,9 @@ services:
             - LOG_LEVEL=INFO
             - MIN_CHUNK_SIZE=1
             - SOURCE_LANGUAGE=en
-            - REPORT_LANGUAGES=en
-            # - TRANSLATE_HOST=libretranslate.server
-            # - TRANSLATE_PORT=5000
+            - REPORT_LANGUAGES=en,fr,es,de,ja
+            - TRANSLATE_HOST=libretranslate.server
+            - TRANSLATE_PORT=5000
             # - USE_GPU=True
             # - FP16=true            
         ports:
@@ -68,16 +68,16 @@ services:
         volumes:
             - ./model_cache:/tmp
 
-    # libretranslate_server:
-    #     hostname: libretranslate.server
-    #     image: libretranslate/libretranslate:latest
-    #     # image: libretranslate/libretranslate:latest-cuda 
-    #     environment:
-    #         - LT_LOAD_ONLY=en,fr,es,de,ja
-    #     ports:
-    #         - 5001:5000
-    #     volumes:
-    #         - /tmp/libretranslate_models_cache:/home/libretranslate/.local
+    libretranslate_server:
+        hostname: libretranslate.server
+        image: libretranslate/libretranslate:v1.7.2
+        # image: libretranslate/libretranslate:v1.7.2-cuda 
+        environment:
+            - LT_LOAD_ONLY=en,fr,es,de,ja
+        ports:
+            - 5001:5000
+        volumes:
+            - /tmp/libretranslate_models_cache:/home/libretranslate/.local
 
 
     manager:

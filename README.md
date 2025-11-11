@@ -17,6 +17,10 @@ Below are 4 quick steps to test captions using the OpenAI Whisper service.
 ```
 docker compose up
 ```
+  Launch the service with the preconfigured translate docker compose file
+  ```
+  docker compose -f docker-compose-translate.yaml up
+  ```
 3. Push a video to your Wowza Streaming Engine service with `rtmp://wse-demo.wowza.com/whisper/myStream` 
 
 > Example ffmpeg command:

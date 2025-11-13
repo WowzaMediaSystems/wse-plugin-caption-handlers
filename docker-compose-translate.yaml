@@ -5,7 +5,7 @@ services:
         image: wowza/wowza-streaming-engine:4.9.4-trial
         platform: linux/amd64
         environment:
-            - WSE_LICENSE_KEY=$WSE_LICENSE_KEY
+            - WSE_LICENSE_KEY=${WSE_LICENSE_KEY}
             - ADMIN_USER=admin
             - ADMIN_PASSWORD=password
             - IPWHITELIST=*

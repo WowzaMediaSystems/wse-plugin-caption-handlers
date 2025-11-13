@@ -74,7 +74,7 @@
 			<Properties>
 <!--				<Property>-->
 <!--					<Name>captionLiveIngestLanguages</Name>-->
-<!--					<Value>eng</Value>-->
+<!--					<Value>en,fr,es,de,ja</Value>-->
 <!--				</Property>-->
 			</Properties>
 		</TimedText>

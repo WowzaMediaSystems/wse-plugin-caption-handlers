@@ -72,10 +72,10 @@
 			<VODTimedTextProviders></VODTimedTextProviders>
 			<!-- Properties for TimedText -->
 			<Properties>
-<!--				<Property>-->
-<!--					<Name>captionLiveIngestLanguages</Name>-->
-<!--					<Value>en,fr,es,de,ja</Value>-->
-<!--				</Property>-->
+				<!--<Property>
+					<Name>captionLiveIngestLanguages</Name>
+					<Value>en,fr,es,de,ja</Value>
+				</Property>-->
 			</Properties>
 		</TimedText>
 		<!-- HTTPStreamers (separate with commas): cupertinostreaming, smoothstreaming, sanjosestreaming, mpegdashstreaming, dvrchunkstreaming -->

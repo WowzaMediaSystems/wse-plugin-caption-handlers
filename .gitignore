@@ -25,3 +25,4 @@ wse
 model_cache
 libretranslate_models
 lib
+.DS_Store

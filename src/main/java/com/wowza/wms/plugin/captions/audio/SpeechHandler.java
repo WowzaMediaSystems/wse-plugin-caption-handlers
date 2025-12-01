@@ -5,12 +5,14 @@
 
 package com.wowza.wms.plugin.captions.audio;
 
+import com.wowza.wms.transcoder.model.TranscoderNativeAudioFrame;
+
 import java.util.Locale;
 import java.util.MissingResourceException;
 
 public interface SpeechHandler extends Runnable, AutoCloseable
 {
-    void addAudioFrame(byte[] frame);
+   void addAudioFrame(TranscoderNativeAudioFrame frame);
 
     void close();
 

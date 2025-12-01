@@ -25,6 +25,7 @@ public class TranscoderAudioFrameListener implements ITranscoderAudioFrameNotify
     @Override
     public void onAudioFrameAfterResample(TranscoderSessionAudio transcoderSessionAudio, TranscoderNativeAudioFrame frame)
     {
-        speechHandler.addAudioFrame(frame.buffer);
+//        System.out.println("onAudioFrameAfterResample: decoderNextFrame: " + frame.decoderNextFrame + ", sampleCount: " + frame.sampleCount + ", bytesPerSample: " + frame.bytesPerSample + " timecode: " + frame.timecode + " len: " + frame.buffer.length);
+        speechHandler.addAudioFrame(frame);
     }
 }

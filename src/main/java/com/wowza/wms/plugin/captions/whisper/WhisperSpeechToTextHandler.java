@@ -20,6 +20,7 @@ import com.wowza.wms.logging.WMSLogger;
 import com.wowza.wms.logging.WMSLoggerFactory;
 import com.wowza.wms.plugin.captions.whisper.model.*;
 import com.wowza.wms.timedtext.model.ITimedTextConstants;
+import com.wowza.wms.transcoder.model.TranscoderNativeAudioFrame;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -229,9 +230,9 @@ public class WhisperSpeechToTextHandler implements SpeechHandler
     }
 
     @Override
-    public void addAudioFrame(byte[] frame)
+    public void addAudioFrame(TranscoderNativeAudioFrame frame)
     {
-        audioBuffer.add(ByteBuffer.wrap(frame));
+        audioBuffer.add(ByteBuffer.wrap(frame.buffer));
     }
 
     @Override

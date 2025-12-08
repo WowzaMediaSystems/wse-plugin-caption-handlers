@@ -81,4 +81,10 @@ public class DelayedStreamCaptionHandler implements CaptionHandler
         Instant end = dotNetEpoch.plusMillis(lastTC - startOffset);
         return new CaptionTiming(start, end);
     }
+
+    @Override
+    public long getStartOffset()
+    {
+        return delayedStream.getStartOffset();
+    }
 }

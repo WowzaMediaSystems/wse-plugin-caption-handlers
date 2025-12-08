@@ -16,6 +16,7 @@ import com.wowza.wms.plugin.captions.caption.CaptionHandler;
 import com.wowza.wms.plugin.captions.caption.CaptionHelper;
 import com.wowza.wms.plugin.captions.caption.CaptionTiming;
 import com.wowza.wms.timedtext.model.ITimedTextConstants;
+import com.wowza.wms.transcoder.model.TranscoderNativeAudioFrame;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -207,9 +208,9 @@ public class AzureSpeechToTextHandler implements SpeechHandler
     }
 
     @Override
-    public void addAudioFrame(byte[] frame)
+    public void addAudioFrame(TranscoderNativeAudioFrame frame)
     {
-        audioStream.write(frame);
+        audioStream.write(frame.buffer);
     }
 
     @Override

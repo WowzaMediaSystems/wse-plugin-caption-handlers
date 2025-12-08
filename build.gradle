@@ -32,6 +32,8 @@ configurations {
 }
 
 dependencies {
+    plugin 'com.microsoft.cognitiveservices.speech:client-sdk:1.47.0@jar'
+
     implementation name: 'wms-server'
     implementation name: 'wms-stream-live'
     implementation name: 'wms-stream-publish'
@@ -41,7 +43,6 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
     implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
-    plugin group: 'com.microsoft.cognitiveservices.speech', name: 'client-sdk', version: '1.44.0', ext: 'jar'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }

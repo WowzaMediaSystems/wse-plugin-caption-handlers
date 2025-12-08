@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     id 'java-library'
-    id "com.gorylenko.gradle-git-properties" version "2.4.0-rc1"
+    id "com.gorylenko.gradle-git-properties" version "2.5.4"
 }
 
 group 'com.wowza.wms.plugin.captions'

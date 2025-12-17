@@ -5,6 +5,7 @@
 
 package com.wowza.wms.plugin.captions.transcoder;
 
+import com.wowza.wms.logging.WMSLoggerFactory;
 import com.wowza.wms.plugin.captions.audio.SpeechHandler;
 import com.wowza.wms.plugin.captions.azure.AzureSpeechToTextHandler;
 import com.wowza.wms.plugin.captions.caption.CaptionHandler;
@@ -71,19 +72,31 @@ public abstract class AudioResamplingTranscoderActionListener extends CaptionsTr
         String mappedName  = streamName.replace(".stream", "");
         TranscoderSessionAudio sessionAudio = transcoder.getTranscodingSession().getSessionAudio();
         SpeechHandler speechHandler = handlers.computeIfAbsent(mappedName, k -> {
-            DelayedStream delayedStream = delayedStreams.computeIfAbsent(mappedName,
-                    name -> new DelayedStream(appInstance, streamName, Executors.newSingleThreadScheduledExecutor()));
-            CaptionHandler captionHandler = new DelayedStreamCaptionHandler(appInstance, delayedStream);
-            SpeechHandler handler = getSpeechHandler(captionHandler);
-            new Thread(handler, AzureSpeechToTextHandler.class.getSimpleName() + "[" + appInstance.getContextStr() + "/" + streamName + "]")
-                    .start();
-            return handler;
+            try
+            {
+                DelayedStream delayedStream = delayedStreams.computeIfAbsent(mappedName,
+                        name -> new DelayedStream(appInstance, streamName, Executors.newSingleThreadScheduledExecutor()));
+                CaptionHandler captionHandler = new DelayedStreamCaptionHandler(appInstance, delayedStream);
+                SpeechHandler handler = getSpeechHandler(captionHandler);
+                new Thread(handler, handler.getClass().getSimpleName() + "[" + appInstance.getContextStr() + "/" + streamName + "]")
+                        .start();
+                return handler;
+            }
+            catch (IOException e)
+            {
+                WMSLoggerFactory.getLoggerObj(AudioResamplingTranscoderActionListener.class, appInstance)
+                        .error("AudioResamplingTranscoderActionListener.onInitStop: Failed to create SpeechHandler for stream " + streamName, e);
+                return null;
+            }
         });
-        TranscoderAudioFrameListener frameListener = new TranscoderAudioFrameListener(speechHandler);
-        sessionAudio.addFrameListener(frameListener);
+        if (speechHandler != null)
+        {
+            TranscoderAudioFrameListener frameListener = new TranscoderAudioFrameListener(speechHandler);
+            sessionAudio.addFrameListener(frameListener);
+        }
     }
 
-    public abstract SpeechHandler getSpeechHandler(CaptionHandler captionHandler);
+    public abstract SpeechHandler getSpeechHandler(CaptionHandler captionHandler) throws IOException;
 
     @Override
     public void onShutdownStart(LiveStreamTranscoder transcoder)

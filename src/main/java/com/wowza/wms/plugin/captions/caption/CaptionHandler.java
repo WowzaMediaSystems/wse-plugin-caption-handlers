@@ -19,4 +19,9 @@ public interface CaptionHandler
     {
         return 0;
     }
+
+    default String getStreamName()
+    {
+        return "unknown";
+    }
 }

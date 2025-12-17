@@ -9,7 +9,6 @@ import com.wowza.wms.application.IApplicationInstance;
 import com.wowza.wms.logging.WMSLogger;
 import com.wowza.wms.logging.WMSLoggerFactory;
 import com.wowza.wms.module.ModuleBase;
-import com.wowza.wms.timedtext.model.ITimedTextConstants;
 
 public class ModuleCaptionsBase extends ModuleBase
 {

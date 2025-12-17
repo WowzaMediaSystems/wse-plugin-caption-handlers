@@ -87,4 +87,10 @@ public class DelayedStreamCaptionHandler implements CaptionHandler
     {
         return delayedStream.getStartOffset();
     }
+
+    @Override
+    public String getStreamName()
+    {
+        return delayedStream.getStreamName();
+    }
 }

@@ -7,12 +7,18 @@ package com.wowza.wms.plugin.captions.stream;
 
 import com.wowza.wms.application.IApplicationInstance;
 import com.wowza.wms.httpstreamer.cupertinostreaming.livestreampacketizer.LiveStreamPacketizerCupertino;
+import com.wowza.wms.logging.WMSLoggerFactory;
+import com.wowza.wms.module.ModuleItem;
+import com.wowza.wms.module.ModuleList;
 import com.wowza.wms.stream.IMediaStream;
 import com.wowza.wms.stream.livepacketizer.*;
 import com.wowza.wms.timedtext.model.ITimedTextConstants;
 
-import static com.wowza.wms.plugin.captions.ModuleCaptionsBase.*;
+import java.util.Collection;
+import java.util.function.Predicate;
 
+import static com.wowza.wms.plugin.captions.ModuleCaptionsBase.DELAYED_STREAM_SUFFIX;
+import static com.wowza.wms.plugin.captions.ModuleCaptionsBase.RESAMPLED_STREAM_SUFFIX;
 
 public class LiveStreamPacketizerListener extends LiveStreamPacketizerActionNotifyBase
 {
@@ -27,9 +33,28 @@ public class LiveStreamPacketizerListener extends LiveStreamPacketizerActionNoti
     public void onLiveStreamPacketizerCreate(ILiveStreamPacketizer packetizer, String streamName)
     {
         IMediaStream stream = appInstance.getStreams().getStream(streamName);
-        if (packetizer instanceof LiveStreamPacketizerCupertino && (streamName.endsWith(DELAYED_STREAM_SUFFIX) || (stream.isTranscodeResult() && !streamName.endsWith(RESAMPLED_STREAM_SUFFIX))))
+        if (!isCEAModuleInstalled() && packetizer instanceof LiveStreamPacketizerCupertino && (streamName.endsWith(DELAYED_STREAM_SUFFIX) || (stream.isTranscodeResult() && !streamName.endsWith(RESAMPLED_STREAM_SUFFIX))))
         {
             packetizer.getProperties().setProperty(ITimedTextConstants.PROP_CUPERTINO_LIVE_USE_WEBVTT, true);
         }
     }
+
+
+    protected boolean isCEAModuleInstalled()
+    {
+        boolean isInstalled = false;
+        try
+        {
+            ModuleList moduleList = appInstance.getModuleList();
+            Collection<ModuleItem> modules = moduleList.getModuleItems().values();
+            Predicate<ModuleItem> predicate = module -> module.getBaseClass().contains("ModuleOnTextDataToCEA");
+            isInstalled = modules.stream().anyMatch(predicate);
+        }
+        catch (Exception e)
+        {
+            WMSLoggerFactory.getLoggerObj(getClass(), appInstance).error(getClass().getSimpleName() + ".isCEAModuleInstalled: exception: " + e, e);
+        }
+        return isInstalled;
+    }
+
 }

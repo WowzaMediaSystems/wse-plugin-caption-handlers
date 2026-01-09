@@ -56,7 +56,7 @@ public class DelayedStreamCaptionHandler implements CaptionHandler
         AMFPacket packet = new AMFPacket(IVHost.CONTENTTYPE_DATA, 0, data);
         packet.setAbsTimecode(startOffset + captionOffset);
         if (debugLog)
-            logger.info(CLASS_NAME + ".handleCaption: packet = " + packet);
+            logger.info(CLASS_NAME + ".handleCaption: packet = " + packet + ", stream buffer: " + delayedStream.getFirstPacketTimecode() + " - " + delayedStream.getLastPacketTimecode());
         delayedStream.writePacket(packet);
     }
 
